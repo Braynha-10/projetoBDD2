@@ -22,6 +22,10 @@ module.exports = {
         type: Sequelize.DOUBLE,
         allowNull: false
       },
+      id_veiculo: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull:false,
