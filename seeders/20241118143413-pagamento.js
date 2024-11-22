@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('servicos', [
+    await queryInterface.bulkInsert('pagamentos', [
       {
         tipo: 1, // 1 pode representar um serviço de manutenção
         valor: 150, // Valor do serviço
@@ -38,6 +38,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('servicos', null, {});
+    await queryInterface.bulkDelete('pagamentos', null, {});
   }
 };

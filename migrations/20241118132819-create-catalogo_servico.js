@@ -3,26 +3,41 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('catalogo_servico', [
-      {
-        nome: 'Troca de Óleo e Filtro Palio 2012',
-        descricao: 'Serviço de troca de óleo do motor e substituição do filtro de óleo, essencial para o bom funcionamento do motor.',
-        preco: 120.00
+    await queryInterface.createTable('catalogo_servico', { 
+      id: {
+        type:Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
       },
-      {
-        nome: 'Alinhamento e Balanceamento',
-        descricao: 'Serviço de alinhamento e balanceamento das rodas, garantindo a segurança e o conforto ao dirigir, além de evitar o desgaste irregular dos pneus.',
-        preco: 150.00
+      nome: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      {
-        nome: 'Troca de Pastilhas de Freio Vectra 2004',
-        descricao: 'Substituição das pastilhas de freio para garantir que o sistema de frenagem funcione corretamente e com segurança.',
-        preco: 200.00
+      descricao: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      preco: {
+        type: Sequelize.DECIMAL,
+        allowNull: false
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull:false,
+        defaultValue: Sequelize.fn('NOW')
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue:  Sequelize.fn('NOW')
       }
-    ]);
+    });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('catalogo_servico', null, {});
+
+     await queryInterface.dropTable('catalogo_servico');
+
   }
 };

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('servicos', { 
+    await queryInterface.createTable('pagamentos', { 
       id: {
         type:Sequelize.INTEGER,
         primaryKey: true,
@@ -15,11 +15,11 @@ module.exports = {
         allowNull: false
       },
       valor: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
       desconto: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
       id_cliente: {
@@ -49,7 +49,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
 
-     await queryInterface.dropTable('servicos');
+     await queryInterface.dropTable('pagamentos');
 
   }
 };

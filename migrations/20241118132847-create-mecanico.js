@@ -3,32 +3,49 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('mecanico', [
-      {
-        nome: 'Carlos Souza',
-        telefone: '11987654321',
-        especialidade: 'Retifica',
-        salario: 3000.00,
-        comissao: 500.00
+    await queryInterface.createTable('mecanico', { 
+      id: {
+        type:Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
       },
-      {
-        nome: 'Luciana Oliveira',
-        telefone: '11976543210',
-        especialidade: 'Suspensão e Direção',
-        salario: 3500.00,
-        comissao: 600.00
+      nome: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      {
-        nome: 'Roberto Lima',
-        telefone: '11965432109',
-        especialidade: 'Elétrica Automotiva',
-        salario: 2800.00,
-        comissao: 400.00
+      telefone: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      especialidade: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      salario: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+      },
+      comissao: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull:false,
+        defaultValue: Sequelize.fn('NOW')
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue:  Sequelize.fn('NOW')
       }
-    ]);
+    });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('mecanico', null, {});
+
+     await queryInterface.dropTable('mecanico');
+
   }
 };

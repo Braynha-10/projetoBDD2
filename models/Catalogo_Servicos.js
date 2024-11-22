@@ -1,10 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-    const Peca = sequelize.define('Peca', {
+    const Catalogo_Servico = sequelize.define('Catalogo_Servico', {
         nome: DataTypes.STRING,
         descricao: DataTypes.STRING,
-        preco: DataTypes.DOUBLE
+        preco: DataTypes.DECIMAL
     }, {});
-    return Peca;
+    return Catalogo_Servico;
 };
  
 
