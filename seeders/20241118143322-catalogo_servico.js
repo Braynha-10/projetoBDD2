@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('catalogo_servico', [
+    await queryInterface.bulkInsert('catalogo_servicos', [
       {
         nome: 'Troca de Óleo e Filtro Palio 2012',
         descricao: 'Serviço de troca de óleo do motor e substituição do filtro de óleo, essencial para o bom funcionamento do motor.',
@@ -23,6 +23,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('catalogo_servico', null, {});
+    await queryInterface.bulkDelete('catalogo_servicos', null, {});
   }
 };
