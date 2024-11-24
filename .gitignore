@@ -1,0 +1,15 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+
+
+# IDEs
+.idea/
+.vscode/
+
+# Build
+dist/
+build/
