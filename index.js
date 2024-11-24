@@ -1,8 +1,10 @@
 const express = require("express");
 const session = require('express-session');
-const {mecanico} = require('./controllers/');
 const path = require("path");
 const methodOverride = require("method-override");
+const authRoutes = require('./routes/authRoutes');
+const mecanicoRoutes = require('./routes/mecanicoRoutes');
+const gerenteRoutes = require('./routes/gerenteRoutes');
 
 const app = express();
 
@@ -26,9 +28,22 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/mecanico', mecanico);
-// app.use('/chefe', chefe)
+// app.use('/mecanico', mecanico);
+// // app.use('/chefe', chefe)
 
-app.listen(8080, ()=>{
-    console.log("Ouvindo a porta 8080")
+// Rotas
+app.get('/', (req, res) => {
+    res.render('index'); // Página inicial
+});
+
+app.get('/login', (req, res) => {
+    res.render('login'); // Página de escolha de login
+});
+
+app.use('/login', authRoutes); // Rotas de login
+app.use('/gerente', gerenteRoutes); // Rotas do painel do gerente
+app.use('/mecanico', mecanicoRoutes); // Rotas do painel do mecânico
+
+app.listen(8080, () => {
+    console.log("Ouvindo a porta 8080");
 });

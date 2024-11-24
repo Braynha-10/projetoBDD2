@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Mecânico</title>
+</head>
+<body>
+    <h1>Login Mecânico</h1>
+    <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            const response = await fetch('/login/mecanico', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, senha })
+            });
+
+            const data = await response.json();
+            console.log(data.user);
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                console.log(localStorage.getItem('token'));
+                alert('Aoba');
+                // Redirecionar para o painel do mecanico
+                window.location.href = '/mecanico?token=' + data.token;
+            } else {
+                alert('Login falhou: ' + data.error);
+            }
+        });
+    </script>
+</body>
+</html>

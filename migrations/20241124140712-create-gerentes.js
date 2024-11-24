@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('mecanicos', { 
+    await queryInterface.createTable('gerentes', { 
       id: {
         type:Sequelize.INTEGER,
         primaryKey: true,
@@ -26,15 +26,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      especialidade: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       salario: {
-        type: Sequelize.DOUBLE,
-        allowNull: false
-      },
-      comissao: {
         type: Sequelize.DOUBLE,
         allowNull: false
       },
@@ -53,7 +45,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
 
-     await queryInterface.dropTable('mecanicos');
+     await queryInterface.dropTable('gerentes');
 
   }
 };
