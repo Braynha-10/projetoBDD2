@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lista de Mecanicos</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Especialidade</th>
+                    <th>Salário</th>
+                    <th>Comissão</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% mecanicos.forEach(mecanico => { %>
+                    <tr>
+                        <td><%= mecanico.nome %></td>
+                        <td><%= mecanico.email %></td>
+                        <td><%= mecanico.telefone %></td>
+                        <td><%= mecanico.especialidade %></td>
+                        <td><%= mecanico.salario %></td>
+                        <td><%= mecanico.comissao %></td>
+                        <td><a href="#">Editar</a></td>
+                        <td><a href="#">Deletar</a></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <p><a href="/gerente">Home</a></p>
+</body>
+</html>

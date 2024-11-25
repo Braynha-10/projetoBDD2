@@ -18,7 +18,10 @@ exports.loginGerente = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id, userType: 'gerente' }, 'seu_segredo_jwt', { expiresIn: '1h' });
-        res.json({ token });
+
+        req.session.gerente = user;
+
+        res.json({ token, user });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

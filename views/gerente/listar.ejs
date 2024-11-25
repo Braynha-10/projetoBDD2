@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lista de gerentes</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Salario</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pecas.forEach(peca => { %>
+                    <tr>
+                        <td><%= peca.nome %></td>
+                        <td><%= peca.email %></td>
+                        <td><%= peca.salario %></td>
+                        <td><a href="#">Editar</a></td>
+                        <td><a href="#">Deletar</a></td>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <p><a href="/gerente">Home</a></p>
+</body>
+</html>
