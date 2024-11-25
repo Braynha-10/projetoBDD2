@@ -29,13 +29,54 @@
                         <td><%= mecanico.especialidade %></td>
                         <td><%= mecanico.salario %></td>
                         <td><%= mecanico.comissao %></td>
-                        <td><a href="#">Editar</a></td>
-                        <td><a href="#">Deletar</a></td>
+                        <td><a href="/gerente/mecanico/editar/<%=mecanico.id%>">Editar</a></td>
+                        <td><button onclick="openModal(<%= mecanico.id %>)">Deletar</button></td>
                     </tr>
                 <% }); %>
             </tbody>
         </table>
 
-        <p><a href="/gerente">Home</a></p>
+        <button onclick="redirectHomeGerente()">Home</button>
 </body>
+
+<!-- Modal Deletar-->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center;">
+    <div style="background: #fff; padding: 20px; border-radius: 8px; width: 300px; text-align: center;">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja excluir este mecânico?</p>
+        <form id="deleteForm" method="POST" style="margin-top: 20px;">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" style="margin-right: 10px;">Sim</button>
+            <button type="button" onclick="closeModal()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+
+
+
 </html>
+
+<script>
+    const redirectHomeGerente = () =>{
+        window.location.href = "/gerente?token=" + localStorage.getItem("token");
+    }
+
+    const openModal = (mecanicoId) => {
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        
+        deleteForm.action = `/gerente/mecanicos/${mecanicoId}?_method=DELETE`;
+        
+        
+        deleteModal.style.display = 'flex';
+    };
+
+    const closeModal = () => {
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.style.display = 'none';
+    };
+
+
+</script>

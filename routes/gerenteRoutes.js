@@ -16,8 +16,12 @@ router.get('/', authMiddleware, (req, res) => {
 
 //Rotas Controle do Mecanico
 router.get('/mecanico/cadastro', async (req, res) => {
-    res.render('mecanico/cadastro'); 
+    res.render('mecanico/cadastro', {mecanico: null}); 
 });
+
+router.get('/mecanico/editar/:id', gerenteController.getEditarMecanico);
+router.patch('/mecanicos/:id', gerenteController.atualizarMecanico);
+router.delete('/mecanicos/:id', gerenteController.deletarMecanico);
 
 router.post('/mecanico/cadastro', async (req,res) => {
     const {nome, email, telefone, senha, especialidade, salario, comissao} = req.body;
@@ -52,6 +56,15 @@ router.get('/servicos/listar', gerenteController.listarServico);
 
 //Rotas Controle Gerente
 router.get('/gerentes/listar', gerenteController.listarGerente);
+
+router.get('/gerentes/cadastro', async (req, res) => {
+    res.render('gerente/cadastro');
+});
+router.post('/gerentes/cadastro', gerenteController.cadastrarGerente);
+router.delete('/gerentes/deletar/:id', gerenteController.deletarGerente);
+router.get('/gerentes/editar/:id', gerenteController.getEditarGerente);
+router.patch('/gerentes/:id', gerenteController.atualizarGerente);
+
 
 
 

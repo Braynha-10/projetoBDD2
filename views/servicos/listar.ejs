@@ -37,6 +37,12 @@
             </tbody>
         </table>
 
-        <p><a href="/gerente">Home</a></p>
+        <button onclick="redirectHomeGerente()">Home</button>
 </body>
 </html>
+
+<script>
+    const redirectHomeGerente = () =>{
+        window.location.href = "/gerente?token=" + localStorage.getItem("token");
+    }
+</script>
