@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Veículo</title>
+</head>
+<body>
+    <h1>Cadastro de Veículo</h1>
+    <form id="cadastroVeiculoForm">
+        <label for="modelo">Modelo:</label>
+        <input type="text" id="modelo" name="modelo" required>
+        <label for="marca">Marca:</label>
+        <input type="text" id="marca" name="marca" required>
+        <label for="ano">Ano:</label>
+        <input type="number" id="ano" name="ano" required>
+        <label for="id_cliente">ID do Cliente:</label>
+        <input type="number" id="id_cliente" name="id_cliente" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+    
+    <script>
+        document.getElementById('cadastroVeiculoForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+            
+            const token = localStorage.getItem('token'); // Obtém o token do localStorage
+            
+            // Exibe o alerta de confirmação
+            const confirmarCadastro = confirm('Tem certeza que deseja cadastrar este veículo?');
+            if (!confirmarCadastro) {
+                // Redireciona para o painel do mecânico
+                window.location.href = '/mecanico?token=' + token;
+                return;
+            }
+
+            // Dados do formulário
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            try {
+                // Envia os dados via POST
+                const response = await fetch('/mecanico/veiculo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // Caso o token seja necessário no header
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao cadastrar veículo. Verifique os dados e tente novamente.');
+                }
+
+                alert('Veículo cadastrado com sucesso!');
+                const cadastrarMaisUm = confirm('Deseja cadastrar mais um veículo?');
+
+                if (cadastrarMaisUm) {
+                    this.reset(); // Limpa o formulário para um novo cadastro
+                } else {
+                    // Redireciona para o painel do mecânico
+                    window.location.href = '/mecanico?token=' + token;
+                }
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        });
+    </script>
+</body>
+</html>
