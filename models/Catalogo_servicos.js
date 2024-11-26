@@ -1,10 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-    const Catalogo_servico = sequelize.define('Catalogo_servico', {
+    const Catalogo_Servico = sequelize.define('Catalogo_Servico', {
         nome: DataTypes.STRING,
         descricao: DataTypes.STRING,
-        preco: DataTypes.DECIMAL,
+        preco: DataTypes.DECIMAL
     }, {});
-    return Catalogo_servico;
+    return Catalogo_Servico;
 };
  
 
