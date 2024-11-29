@@ -7,15 +7,15 @@
 </head>
 <body>
     <h1>Editar Veículo</h1>
-    <form action="/mecanico/veiculo/<%= veiculo.id %>?_method=PATCH" method="POST">
+    <form action="/mecanico/veiculo/<%= Veiculo.id %>?_method=PATCH" method="POST">
         <label for="modelo">Modelo:</label>
-        <input type="text" id="modelo" name="modelo" value="<%= veiculo.modelo %>" required>
+        <input type="text" id="modelo" name="modelo" value="<%= Veiculo.modelo %>" required>
         <label for="marca">Marca:</label>
-        <input type="text" id="marca" name="marca" value="<%= veiculo.marca %>" required>
+        <input type="text" id="marca" name="marca" value="<%= Veiculo.marca %>" required>
         <label for="ano">Ano:</label>
-        <input type="number" id="ano" name="ano" value="<%= veiculo.ano %>" required>
+        <input type="number" id="ano" name="ano" value="<%= Veiculo.ano %>" required>
         <label for="id_cliente">ID do Cliente:</label>
-        <input type="number" id="id_cliente" name="id_cliente" value="<%= veiculo.id_cliente %>" required>
+        <input type="number" id="id_cliente" name="id_cliente" value="<%= Veiculo.id_cliente %>" required>
         <button type="submit">Salvar</button>
     </form>
 </body>

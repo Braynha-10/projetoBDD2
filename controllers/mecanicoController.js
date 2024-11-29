@@ -109,6 +109,23 @@ exports.cadastroVeiculo = async(req, res) => {
     }
 };
 
+exports.editarVeiculo = async(req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Buscar o veículo pelo ID
+        const veiculo = await Veiculo.findByPk(id);
+        if (!veiculo) {
+            return res.status(404).send('Veículo não encontrado');
+        }
+        // Renderizar a view de edição com os dados do veículo
+        res.render('veiculo/editarVeiculo', { Veiculo: veiculo });
+    } catch (error) {
+        console.error('Erro ao buscar veículo:', error);
+        res.status(500).send('Erro ao buscar veículo');
+    }
+};
+
 exports.atualizandoVeiculo = async(req, res) => {
     const { id } = req.params;
     const { modelo, marca, ano, id_cliente } = req.body;
@@ -136,3 +153,76 @@ exports.deletaVeiculo = async(req, res) => {
         res.status(500).send('Erro ao deletar veículo');
     }
 };
+
+// Clientes --------------------------------------------------------------------------------------------------------------------------------------
+exports.listarClientesMecanico = async(req, res, id) => {
+    try {
+        const clientes = await Cliente.findAll({
+            include: {
+                model: Pagamento,
+                include: {
+                    model: Servico,
+                    where: { id_mecanico: id },  // Use o ID do mecânico logado
+                    required: true,
+                },
+                required: true
+            }
+        });
+        res.render('cliente/listaClientes', { Cliente: clientes });
+    } catch (error) {
+        console.error('Erro ao listar os clientes: ', error);
+        res.status(500).send("Erro ao listar os Clientes");
+    }
+}
+
+exports.cadastroCliente = async(req, res) => {
+    const { nome, telefone, email, endereco } = req.body;
+
+    try {
+        // Recupere os dados do mecânico da sessão
+        const mecanico = req.session.mecanico;
+        // Salvar no banco de dados
+        await Cliente.create({  nome, telefone, email, endereco  });
+        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+    } catch (error) {
+        console.error('Erro ao cadastrar Cliente:', error);
+        res.status(500).send('Erro ao cadastrar Cliente');
+    }
+}
+
+exports.atualizandoCliente = async(req, res) => {
+    // const { id } = req.params;
+    // const { nome, telefone, email, endereco } = req.body;
+
+    // try {
+    //     // Recupere os dados do mecânico da sessão
+    //     const mecanico = req.session.mecanico;
+    //     await Cliente.update({ nome, telefone, email, endereco }, { where: { id } });
+    //     res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+    // } catch (error) {
+    //     console.error('Erro ao atualizar Cliente:', error);
+    //     res.status(500).send('Erro ao atualizar Cliente');
+    // }
+    const { id } = req.params;
+    const { nome, telefone, email } = req.body;
+
+    try {
+        await Cliente.update({ nome, telefone, email }, { where: { id } });
+        res.redirect('/mecanico'); // Redireciona para painel do mecânico
+    } catch (error) {
+        console.error('Erro ao atualizar Cliente:', error);
+        res.status(500).send('Erro ao atualizar cliente');
+    }
+}
+
+exports.deletaCliente = async(req, res) => { 
+    const { id } = req.params;
+
+    try {
+        await Cliente.destroy({ where: { id } });
+        res.redirect('/mecanico'); // Redireciona para painel do mecânico
+    } catch (error) {
+        console.error('Erro ao deletar Cliente:', error);
+        res.status(500).send('Erro ao deletar cliente');
+    }
+}	
