@@ -84,14 +84,37 @@
 
 // });
 // //-------------------------------------------------------------------------------------
-const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo_servico } = require('../models'); // Importação dos modelos de dados
+const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo } = require('../models'); // Importação dos modelos de dados
 
 // Veiculos --------------------------------------------------------------------------------------------------------------------------------------
 
-exports.listandoVeiculos = async(req, res) => {
-    Veiculo.findAll().then(veiculo => {
-        res.render('veiculo/listaVeiculos', {Veiculo: veiculo});
-    });
+exports.listandoVeiculos = async(req, res, id) => {
+    // Veiculo.findAll().then(veiculo => {
+    //     res.render('veiculo/listaVeiculos', {Veiculo: veiculo});
+    // });
+    
+    try {
+        const veiculo = await Veiculo.findAll({
+            include: {
+                model: Cliente,
+                include: {
+                    model: Pagamento,
+                    include: {
+                        model: Servico,
+                        where: { id_mecanico: id },  // Use o ID do mecânico logado
+                        required: true,
+                    },
+                    required: true            
+                    },
+                required: true
+                },
+        });
+        res.render('veiculo/listaVeiculos', { Veiculo: veiculo });
+    } catch (error) {
+        console.error('Erro ao listar os veiculos: ', error);
+        res.status(500).send("Erro ao listar os Veiculos");
+    }
+
 };
 
 exports.cadastroVeiculo = async(req, res) => {

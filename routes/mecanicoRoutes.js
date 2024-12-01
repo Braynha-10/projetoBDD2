@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo_servico } = require('../models'); // Importação dos modelos de dados
-const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo } = require('../controllers/mecanicoController');
+const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo } = require('../models'); // Importação dos modelos de dados
+const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico } = require('../controllers/mecanicoController');
 
 
 
@@ -25,7 +25,10 @@ router.get('/veiculo', (req, res) => {
 
 // listar veiculos
 router.get('/veiculos', (req, res) => {
-    listandoVeiculos(req, res);
+    // Recupere os dados do mecânico da sessão
+    const {id} = req.session.mecanico;
+    
+    listandoVeiculos(req, res, id);
 });
 
 // modificar veiculos

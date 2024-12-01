@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      id_servico: {
+      id_catalogo: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
