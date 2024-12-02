@@ -84,7 +84,7 @@
 
 // });
 // //-------------------------------------------------------------------------------------
-const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo } = require('../models'); // Importação dos modelos de dados
+const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo, Peca, Solicitacoes_servico } = require('../models'); // Importação dos modelos de dados
 
 // Veiculos --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -249,3 +249,51 @@ exports.deletaCliente = async(req, res) => {
         res.status(500).send('Erro ao deletar cliente');
     }
 }	
+
+// Serviços --------------------------------------------------------------------------------------------------------------------------------------
+exports.listarServicos = async(req, res, id) => {  
+    try {
+        const catalogos = await Catalogo.findAll(); // Busca todos os serviços do catálogo
+        const veiculos = await Veiculo.findAll({
+            include: {
+                model: Cliente,
+                include: {
+                    model: Pagamento,
+                    include: {
+                        model: Servico,
+                        where: { id_mecanico: id },  // Use o ID do mecânico logado
+                        required: true,
+                    },
+                    required: true            
+                },
+                required: true
+            },
+        });
+        const pecas = await Peca.findAll();
+        const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
+        
+        console.log(mecanico);
+
+        res.render('servico/cadastroServico', { catalogos, mecanico, veiculos, pecas });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao carregar a página de solicitação de serviço');
+    }
+}
+
+exports.listandoSolicitacoesServicos = async(req, res, id) => {
+    try {
+        const servicos = await Solicitacoes_servico.findAll({
+            include: [
+                { model: Veiculo, include: Cliente },
+                {model: Catalogo},
+                {model: Peca},
+                {model: Mecanico},
+            ]
+        });
+        res.render('servico/listaServicos', { Servico: servicos });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de serviço: ', error);
+        res.status(500).send("Erro ao listar as solicitações de serviço");
+    }
+}

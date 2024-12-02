@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('solicitacao_servicos', {
+        await queryInterface.createTable('solicitacoes_servicos', {
             id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
@@ -18,6 +18,44 @@ module.exports = {
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
+            },
+            // id_cliente: {
+            //     type: Sequelize.INTEGER,
+            //     allowNull: false,
+            //     references: {
+            //         model: 'Clientes',
+            //         key: 'id'
+            //     },
+            //     onUpdate: 'CASCADE',
+            //     onDelete: 'CASCADE'
+            // },
+            id_veiculo: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'Veiculos',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
+            id_peca: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'Pecas',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
+            tipo_pagamento: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            desconto: {
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
             id_catalogo: {
                 type: Sequelize.INTEGER,
@@ -51,6 +89,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('solicitacao_servicos');
+        await queryInterface.dropTable('solicitacoes_servicos');
     }
 };

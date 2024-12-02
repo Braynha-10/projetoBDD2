@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Lista de Servicos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        thead tr {
+            background-color: #003598;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        tbody tr:last-of-type {
+            border-bottom: 2px solid #005498;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <h1>Lista de solicitações</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Mecanico</th>
+                <th>Veiculo</th>
+                <th>Nome da Peça</th>
+                <th>Tipo de Pagamento</th>
+                <th>Desconto</th>
+                <th>Nome do Serviço</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <% if (gerente==="gerente") { %>
+                <th>Modifica status</th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% Servico.forEach(servico => { %>
+                <tr>
+                    <td><%= servico.Mecanico.nome%></td>
+                    <td><%= servico.Veiculo.modelo %></td>
+                    <td><%= servico.Peca.nome %></td>
+                    <td><%= servico.tipo_pagamento %></td>
+                    <td><%= servico.desconto %></td>
+                    <td><%= servico.Catalogo.nome%></td>
+                    <td><%= servico.descricao %></td>
+                    <td><%= servico.status %></td>
+                    <% if (gerente==="gerente") { %>
+                        <td><form action="gerente/servicos" method="post">
+                            <select name="" id="status">
+                                <option value="pendente">Pendente</option>
+                                <option value="em andamento">Em andamento</option>
+                                <option value="finalizado">Finalizado</option>
+                            </select>
+                            <button type="submit">Alterar</button>
+                        </form></td>
+                    <% } %>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>
