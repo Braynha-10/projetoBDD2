@@ -1,4 +1,5 @@
 // const {Mecanico} = require('../models');
+
 // const {Router} = require('express');
 
 // const roteador = Router();
@@ -83,3 +84,55 @@
 
 // });
 // //-------------------------------------------------------------------------------------
+const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo_servico } = require('../models'); // Importação dos modelos de dados
+
+// Veiculos --------------------------------------------------------------------------------------------------------------------------------------
+
+exports.listandoVeiculos = async(req, res) => {
+    Veiculo.findAll().then(veiculo => {
+        res.render('veiculo/listaVeiculos', {Veiculo: veiculo});
+    });
+};
+
+exports.cadastroVeiculo = async(req, res) => {
+    const { modelo, marca, ano, id_cliente } = req.body;
+
+    try {
+        // Recupere os dados do mecânico da sessão
+        const mecanico = req.session.mecanico;
+        // Salvar no banco de dados
+        await Veiculo.create({  modelo, marca, ano, id_cliente });
+        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+    } catch (error) {
+        console.error('Erro ao cadastrar Veiculo:', error);
+        res.status(500).send('Erro ao cadastrar veiculo');
+    }
+};
+
+exports.atualizandoVeiculo = async(req, res) => {
+    const { id } = req.params;
+    const { modelo, marca, ano, id_cliente } = req.body;
+
+    try {
+        // Recupere os dados do mecânico da sessão
+        const mecanico = req.session.mecanico;
+        await Veiculo.update({ modelo, marca, ano, id_cliente }, { where: { id } });
+        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+    } catch (error) {
+        console.error('Erro ao atualizar Veiculo:', error);
+        res.status(500).send('Erro ao atualizar veículo');
+    }
+};
+
+exports.deletaVeiculo = async(req, res) => {
+    const { id } = req.params;
+
+    try {
+        const mecanico = req.session.mecanico;
+        await Veiculo.destroy({ where: { id } });
+        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+    } catch (error) {
+        console.error('Erro ao deletar Veiculo:', error);
+        res.status(500).send('Erro ao deletar veículo');
+    }
+};

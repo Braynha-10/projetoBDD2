@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Veículos</title>
+</head>
+<body>
+    <h1>Lista de Veículos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Ano</th>
+                <th>ID do Cliente</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% Veiculo.forEach(veiculo => { %>
+                <tr>
+                    <td><%= veiculo.modelo %></td>
+                    <td><%= veiculo.marca %></td>
+                    <td><%= veiculo.ano %></td>
+                    <td><%= veiculo.id_cliente %></td>
+                    <td>
+                        <a href="/mecanico/veiculos/<%= veiculo.id %>/editar">Editar</a>
+                        <form action="/mecanico/veiculos/<%= veiculo.id %>?_method=DELETE" method="POST" style="display:inline;">
+                            <button type="submit">Deletar</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>
