@@ -5,6 +5,18 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Lista de pecas</title>
     <style>
+        .select-hidden {
+            opacity: 0;
+        }
+
+        .disabled {
+            background-color: #ccc; 
+            color: #666; 
+            cursor: not-allowed; 
+            pointer-events: none; 
+            opacity: 0.7;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -71,13 +83,13 @@
                     <td><%= peca.preco%></td>
                     <td><%= peca.status %></td>
                     <% if (gerente) { %>
-                        <td><form action="gerente/pecas" method="post">
-                            <select name="" id="status">
-                                <option value="pendente">Pendente</option>
-                                <option value="aceito">Aceito</option>
-                                <option value="recusado">Recusado</option>
+                        <td><form action="/gerente/pecas/solicitacoes" method="post">
+                            <input type="hidden" name="solicitacaoId" id="solicitacaoId" value="<%= peca.id %>">
+                            <select name="status" id="status" class="<%= peca.status === 'APROVADO' ? 'select-hidden' : '' %>">
+                                <option value="Aprovar">Aprovar</option>
+                                <option value="Rejeitar">Rejeitar</option>
                             </select>
-                            <button type="submit">Alterar</button>
+                            <button type="submit" class="<%= peca.status === 'APROVADO' ? 'disabled' : '' %>">Alterar</button>
                         </form></td>
                     <% } %>
                 </tr>

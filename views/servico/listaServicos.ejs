@@ -78,10 +78,10 @@
                     <td><%= servico.status %></td>
                     <% if (gerente==="gerente") { %>
                         <td><form action="gerente/servicos" method="post">
-                            <select name="" id="status">
-                                <option value="pendente">Pendente</option>
-                                <option value="em andamento">Em andamento</option>
-                                <option value="finalizado">Finalizado</option>
+                            <select name="status" id="status">
+                                <option value="PENDENTE">Pendente</option>
+                                <option value="APROVADO">Aprovado</option>
+                                <option value="RECUSADO">Recusado</option>
                             </select>
                             <button type="submit">Alterar</button>
                         </form></td>
