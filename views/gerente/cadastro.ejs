@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="<%= gerente ? `/gerente/gerentes/${gerente.id}?_method=PATCH` : '/gerente/gerentes/cadastro' %>" method="<%= gerente ? 'post' : 'post' %>">
+        <input type="hidden" name="_method" value="<%= gerente ? 'PATCH' : 'POST' %>">
+        <label for="Nome">
+            Nome: <input type="text" name="nome" id="nome" value="<%= gerente ? gerente.nome: "" %>" required>
+        </label>
+        <label for="Telefone">
+            Telefone: <input type="text" name="telefone" id="telefone" value="<%= gerente ? gerente.telefone: "" %>" required>
+        </label>
+        <label for="Salario">
+            Salario: <input type="number" name="salario" id="salario" value="<%= gerente ? gerente.salario: "" %>" required>
+        </label>
+        <label for="Email">
+            Email: <input type="text" name="email" id="email" value="<%= gerente ? gerente.email: "" %>" required>
+        </label>
+        <label for="Senha">
+            Senha: <input type="text" name="senha" id="senha" value="<%= gerente ? gerente.senha: "" %>" required>
+        </label>
+
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>

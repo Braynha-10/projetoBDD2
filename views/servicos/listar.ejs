@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lista de Servicos</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Mecanico</th>
+                    <th>Veiculo</th>
+                    <th>Servico</th>
+                    <th>Peca</th>
+                    <th>Preco c/Desconto</th>
+                    <th>descricao</th>
+                    <th>status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% servicos.forEach(servico => { %>
+                    <tr>
+                        <td><%= servico.Mecanico.nome %></td>
+                        <td><%= servico.Veiculo.modelo %></td>
+                        <td><%= servico.Catalogo_Servico.nome %></td>
+                        <% if (servico.Peca && servico.Peca.nome != null) { %>
+                            <td><%= servico.Peca.nome %></td>
+                        <% } else { %>
+                            <td>Nao Utilizada</td>  
+                        <% } %>
+                        <td><%= servico.Pagamento.valor - servico.Pagamento.desconto %></td>
+                        <td><%= servico.descricao %></td>
+                        <td><%= servico.status %></td>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <button onclick="redirectHomeGerente()">Home</button>
+</body>
+</html>
+
+<script>
+    const redirectHomeGerente = () =>{
+        window.location.href = "/gerente?token=" + localStorage.getItem("token");
+    }
+</script>

@@ -1,9 +1,8 @@
 const mecanicoController = require('./mecanicoController');
-const veiculoController = require('./veiculoController');
-
+const gerenteController = require('./gerenteController')
 controllers = {
     mecanico: mecanicoController,
-    veiculo: veiculoController,
+    gerente: gerenteController,
 }
 
 module.exports = controllers;

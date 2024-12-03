@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lista de Pecas</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descricao</th>
+                    <th>Preco</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pecas.forEach(peca => { %>
+                    <tr>
+                        <td><%= peca.nome %></td>
+                        <td><%= peca.descricao %></td>
+                        <td><%= peca.preco %></td>
+                        <td><a href="#">Editar</a></td>
+                        <td><a href="#">Deletar</a></td>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <button onclick="redirectHomeGerente()">Home</button>
+</body>
+</html>
+
+<script>
+    const redirectHomeGerente = () =>{
+        window.location.href = "/gerente?token=" + localStorage.getItem("token");
+    }
+</script>

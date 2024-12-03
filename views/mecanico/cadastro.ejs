@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="<%= mecanico ? `/gerente/mecanicos/${mecanico.id}?_method=PATCH` : '/gerente/mecanico/cadastro' %>" method="<%= mecanico ? 'post' : 'post' %>"> <!-- Gerenciado pela entidade Gerente-->
+        <input type="hidden" name="_method" value="<%= mecanico ? 'PATCH' : 'POST' %>">
+
+        <label for="nome">Nome:
+            <input type="text" name="nome" id="nome" value="<%= mecanico ? mecanico.nome: "" %>" required>
+        </label>
+        <label for="email">Email:
+            <input type="text" name="email" id="email" value="<%= mecanico ? mecanico.email : "" %>" required>
+        </label>
+        <label for="telefone">Telefone:
+            <input type="text" name="telefone" id="telefone" value="<%= mecanico ? mecanico.telefone : "" %>" required>
+        </label>
+        <label for="senha">Senha:
+            <input type="text" name="senha" id="senha" value="<%= mecanico ? mecanico.senha : "" %>" required>
+        </label>
+        <label for="especialidade">Especialidade:
+            <input type="text" name="especialidade" id="especialidade" value="<%= mecanico ? mecanico.especialidade : "" %>" required>
+        </label>
+        <label for="salario">Salario: 
+            <input type="number" name="salario" id="salario" value="<%= mecanico ? mecanico.salario : "" %>" required>
+        </label>
+        <label for="comissao">Comissao:
+            <input type="number" name="comissao" id="comissao" value="<%= mecanico ? mecanico.comissao : "" %>" required>  <!-- em porcentagem -->
+        </label>
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>
