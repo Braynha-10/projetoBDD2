@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:create": "sequelize-cli db:create",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:seed:all": "sequelize-cli db:seed:all",
+    "db:setup": "npm run db:create && npm run db:migrate && npm run db:seed:all"
   },
   "author": "Bryan&Arthur",
   "license": "ISC",

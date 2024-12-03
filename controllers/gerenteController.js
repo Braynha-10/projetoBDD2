@@ -1,5 +1,5 @@
-const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo_Servico, Gerente, Cliente } = require('../models');
-const Mecanicos = require('../models/Mecanicos');
+const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo_Servico, Gerente, Cliente, Solicitacoes_peca, Solicitacoes_servico, sequelize } = require('../models');
+
 
 //Metodos Mecanico
 const listarMecanicos = async(req,res) => {
@@ -178,6 +178,49 @@ const listarGerente = async (req, res) => {
 
 
 
+const processarSolicitacaoPeca = async (req, res) => {
+    const {solicitacaoId, status} = req.body;
+    // console.log(id);
+
+    const transaction = await sequelize.transaction();
+    const solicitacao = await Solicitacoes_peca.findByPk(solicitacaoId);
+    // console.log(solicitacao)
+    if (!solicitacao){
+        return res.status(404).send('Solicitacao nao encontrada!');
+    }
+    if(status === "Aprovar"){
+        try {
+
+            const novaPeca = await Peca.create({
+                nome: solicitacao.nome,
+                descricao: solicitacao.descricao,
+                preco: solicitacao.preco
+            },
+            { transaction }
+        );
+
+        solicitacao.status = 'aprovado';
+        await solicitacao.save({transaction});
+
+        await transaction.commit();
+
+        res.redirect("/gerente/pecas/solicitacoes")
+            
+
+        } catch (error) {
+            await transaction.rollback();
+            return res.status(500).json({error: error.message})
+        }
+    } else {
+        solicitacao.status = 'recusado';
+        await solicitacao.save({transaction});
+        await transaction.commit();
+        res.redirect("/gerente/pecas/solicitacoes");
+    }
+}
+
+
+
 module.exports = {
     listarMecanicos, 
     atualizarMecanico, 
@@ -190,5 +233,6 @@ module.exports = {
     cadastrarGerente, 
     atualizarGerente, 
     getEditarGerente, 
-    deletarGerente
+    deletarGerente,
+    processarSolicitacaoPeca
 };

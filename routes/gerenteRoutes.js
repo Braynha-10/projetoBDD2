@@ -61,6 +61,8 @@ router.get('/pecas/solicitacoes', async (req, res) => {
     }
 });
 
+router.post('/pecas/solicitacoes', gerenteController.processarSolicitacaoPeca);
+
 router.post('/pecas/cadastro', gerenteController.cadastrarPeca);
 
 router.get('/pecas/listar', gerenteController.listarPeca);
