@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Solicitacao_peca = sequelize.define('Solicitacao_peca', {
+    const Solicitacoes_peca = sequelize.define('Solicitacoes_peca', {
         nome: DataTypes.STRING,
         descricao: DataTypes.STRING,
         preco: DataTypes.DOUBLE,
@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 'pendente'
         }
     }, {});
-        Solicitacao_peca.associate = function(models) {
-        Solicitacao_peca.belongsTo(models.Mecanico, { foreignKey: 'id_mecanico' });
+        Solicitacoes_peca.associate = function(models) {
+        Solicitacoes_peca.belongsTo(models.Mecanico, { foreignKey: 'id_mecanico' });
     };
-    return Solicitacao_peca;
+    return Solicitacoes_peca;
 };

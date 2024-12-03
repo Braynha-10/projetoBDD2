@@ -115,6 +115,50 @@ router.post("/servico", async (req, res) => {
     }
 });
 
+// PECAS----------------------------------------------------------------------------------------------------------------------------------------
+// Solicitar pecas
+router.get('/peca', async (req, res) => { 
+    const pecas = await Peca.findAll();
+    res.render('peca/cadastroPeca', {pecas});
+});
+
+// Listar pecas
+router.get('/pecas', async (req, res) => {
+    try {
+        const pecas = await Solicitacoes_peca.findAll({
+            include: [
+                { model: Mecanico },
+            ]
+        });
+        const gerente = false;
+        res.render('peca/listaPeca', { pecas, gerente });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de peças: ', error);
+        res.status(500).send('Erro ao listar as solicitações de peças');
+    }
+});
+
+//Cadastro de Solicitação de pecas
+router.post('/pecas', async (req, res) => {
+    const { nome, descricao, preco } = req.body;
+    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
+    try {
+        await Solicitacoes_peca.create({
+            id_mecanico:mecanico.id,
+            nome,
+            descricao,
+            preco,
+            status: 'PENDENTE' // Sempre começa como pendente
+        });
+        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao criar a solicitação de peça');
+    }
+});
+
+
+
 // Atualizar serviço
 router.patch('/servicos/:id', async (req, res) => {
     const { id } = req.params;

@@ -291,7 +291,8 @@ exports.listandoSolicitacoesServicos = async(req, res, id) => {
                 {model: Mecanico},
             ]
         });
-        res.render('servico/listaServicos', { Servico: servicos });
+        const gerente = false
+        res.render('servico/listaServicos', { Servico: servicos, gerente });
     } catch (error) {
         console.error('Erro ao listar as solicitações de serviço: ', error);
         res.status(500).send("Erro ao listar as solicitações de serviço");
