@@ -84,7 +84,7 @@
 
 // });
 // //-------------------------------------------------------------------------------------
-const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo, Peca, Solicitacoes_servico } = require('../models'); // Importação dos modelos de dados
+const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo, Peca, Solicitacoes_servico, Solicitacoes_peca } = require('../models'); // Importação dos modelos de dados
 
 // Veiculos --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -296,5 +296,61 @@ exports.listandoSolicitacoesServicos = async(req, res, id) => {
     } catch (error) {
         console.error('Erro ao listar as solicitações de serviço: ', error);
         res.status(500).send("Erro ao listar as solicitações de serviço");
+    }
+}
+
+// Solicitação de Serviço
+exports.solicitarServico = async(req, res) => {
+    const { id_mecanico, id_catalogo, id_veiculo, id_peca, pagamento, desconto, descricao } = req.body;
+    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
+    try {
+        await Solicitacoes_servico.create({
+            id_mecanico,
+            id_veiculo,
+            id_peca,
+            id_catalogo,
+            tipo_pagamento: pagamento,
+            desconto,
+            descricao,
+            status: 'PENDENTE' // Sempre começa como pendente
+        });
+        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao criar a solicitação de serviço');
+    }
+}
+
+//pecas----------------------------------------------------------------------------------------------------------------------------------------
+exports.listarSolitacoesPecas = async(req, res) => {
+    try {
+        const pecas = await Solicitacoes_peca.findAll({
+            include: [
+                { model: Mecanico },
+            ]
+        });
+        const gerente = false;
+        res.render('peca/listaPeca', { pecas, gerente });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de peças: ', error);
+        res.status(500).send('Erro ao listar as solicitações de peças');
+    }
+}
+
+exports.solicitarPeca = async(req, res) => {
+    const { nome, descricao, preco } = req.body;
+    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
+    try {
+        await Solicitacoes_peca.create({
+            id_mecanico:mecanico.id,
+            nome,
+            descricao,
+            preco,
+            status: 'PENDENTE' // Sempre começa como pendente
+        });
+        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao criar a solicitação de peça');
     }
 }

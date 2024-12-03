@@ -61,6 +61,38 @@ router.get('/pecas/solicitacoes', async (req, res) => {
     }
 });
 
+router.post('/pecas/solicitacoes', async (req, res) => {
+    const { status } = req.body;
+
+    try {
+        if (status === 'aprovado') {
+            const { id_mecanico, id_peca, quantidade } = req.body;
+            const peca = await Solicitacoes_peca.findOne({ where: { id_mecanico, id_peca } });
+            if (peca) {
+                peca.quantidade += quantidade;
+                await peca.save();
+            } else {
+                await Solicitacoes_peca.create({ id_mecanico, id_peca, quantidade });
+            }
+        }else if(status === 'rejeitado'){
+            const { id_mecanico, id_peca } = req.body;
+            await Solicitacoes_peca.destroy({ where: { id_mecanico, id_peca } });
+        }
+        await Solicitacoes_peca.create({ id_mecanico, id_peca, quantidade });
+        res.redirect('/gerente/pecas/solicitacoes');
+    } catch (error) {
+        console.error('Erro ao solicitar peça: ', error);
+        res.status(500).send('Erro ao solicitar peça');
+    }
+});
+
+
+
+
+
+
+
+
 router.post('/pecas/cadastro', gerenteController.cadastrarPeca);
 
 router.get('/pecas/listar', gerenteController.listarPeca);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 const { Veiculo, Cliente, Pagamento, Servico, Peca, Mecanico, Catalogo, Solicitacoes_servico, Solicitacoes_peca} = require('../models'); // Importação dos modelos de dados
-const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos } = require('../controllers/mecanicoController');
+const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos, solicitarServico, listarSolitacoesPecas, solicitarPeca } = require('../controllers/mecanicoController');
 
 
 
@@ -27,7 +27,7 @@ router.get('/veiculo', (req, res) => {
 router.get('/veiculos', (req, res) => {
     // Recupere os dados do mecânico da sessão
     const {id} = req.session.mecanico;
-    
+
     listandoVeiculos(req, res, id);
 });
 
@@ -95,24 +95,7 @@ router.get('/servicos', async(req, res) => {
 
 // Solicitar servico
 router.post("/servico", async (req, res) => {
-    const { id_mecanico, id_catalogo, id_veiculo, id_peca, pagamento, desconto, descricao } = req.body;
-    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
-    try {
-        await Solicitacoes_servico.create({
-            id_mecanico,
-            id_veiculo,
-            id_peca,
-            id_catalogo,
-            tipo_pagamento: pagamento,
-            desconto,
-            descricao,
-            status: 'PENDENTE' // Sempre começa como pendente
-        });
-        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao criar a solicitação de serviço');
-    }
+    solicitarServico(req, res);
 });
 
 // PECAS----------------------------------------------------------------------------------------------------------------------------------------
@@ -124,37 +107,12 @@ router.get('/peca', async (req, res) => {
 
 // Listar pecas
 router.get('/pecas', async (req, res) => {
-    try {
-        const pecas = await Solicitacoes_peca.findAll({
-            include: [
-                { model: Mecanico },
-            ]
-        });
-        const gerente = false;
-        res.render('peca/listaPeca', { pecas, gerente });
-    } catch (error) {
-        console.error('Erro ao listar as solicitações de peças: ', error);
-        res.status(500).send('Erro ao listar as solicitações de peças');
-    }
+    listarSolitacoesPecas(req, res);
 });
 
 //Cadastro de Solicitação de pecas
 router.post('/pecas', async (req, res) => {
-    const { nome, descricao, preco } = req.body;
-    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
-    try {
-        await Solicitacoes_peca.create({
-            id_mecanico:mecanico.id,
-            nome,
-            descricao,
-            preco,
-            status: 'PENDENTE' // Sempre começa como pendente
-        });
-        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao criar a solicitação de peça');
-    }
+    solicitarPeca(req, res);
 });
 
 
