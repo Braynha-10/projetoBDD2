@@ -25,8 +25,15 @@ app.use(session({
     cookie: { secure: false } // Defina como `true` se usar HTTPS
 }));
 
+// // Servindo arquivos estáticos da pasta public
+// app.use(express.static(path.join(__dirname, 'views/public')));
+// app.use(express.static(path.join(__dirname, 'views/mecanico')));
+app.use('/public', express.static(path.join(__dirname, 'views/public')));
+// app.use('/mecanico', express.static(path.join(__dirname, 'views/mecanico')));
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 
 // app.use('/mecanico', mecanico);
 // // app.use('/chefe', chefe)

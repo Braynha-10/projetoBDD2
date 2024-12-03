@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Lista de Servicos</title>
+    <title>Lista de pecas</title>
     <style>
         table {
             width: 100%;
@@ -23,7 +23,7 @@
 
         th, td {
             padding: 12px 15px;
-            border: 1px solid #dddddd;
+            border: 1px solid #7cb1ff;
         }
 
         tbody tr {
@@ -53,12 +53,9 @@
         <thead>
             <tr>
                 <th>Mecanico</th>
-                <th>Veiculo</th>
                 <th>Nome da Peça</th>
-                <th>Tipo de Pagamento</th>
-                <th>Desconto</th>
-                <th>Nome do Serviço</th>
                 <th>Descrição</th>
+                <th>Preco</th>
                 <th>Status</th>
                 <% if (gerente==="gerente") { %>
                 <th>Modifica status</th>
@@ -66,18 +63,15 @@
             </tr>
         </thead>
         <tbody>
-            <% Servico.forEach(servico => { %>
+            <% pecas.forEach(peca => { %>
                 <tr>
-                    <td><%= servico.Mecanico.nome%></td>
-                    <td><%= servico.Veiculo.modelo %></td>
-                    <td><%= servico.Peca.nome %></td>
-                    <td><%= servico.tipo_pagamento %></td>
-                    <td><%= servico.desconto %></td>
-                    <td><%= servico.Catalogo.nome%></td>
-                    <td><%= servico.descricao %></td>
-                    <td><%= servico.status %></td>
+                    <td><%= peca.Mecanico.nome%></td>
+                    <td><%= peca.nome %></td>
+                    <td><%= peca.descricao %></td>
+                    <td><%= peca.preco%></td>
+                    <td><%= peca.status %></td>
                     <% if (gerente==="gerente") { %>
-                        <td><form action="gerente/servicos" method="post">
+                        <td><form action="gerente/pecas" method="post">
                             <select name="" id="status">
                                 <option value="pendente">Pendente</option>
                                 <option value="em andamento">Em andamento</option>

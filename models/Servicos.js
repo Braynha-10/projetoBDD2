@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         id_mecanico: DataTypes.INTEGER,
         id_veiculo: DataTypes.INTEGER,
-        id_servico: DataTypes.INTEGER,
+        id_catalogo: DataTypes.INTEGER,
         id_peca: DataTypes.INTEGER,
         id_pagamento: DataTypes.INTEGER,
         descricao: DataTypes.STRING,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     Servico.associate = function(models) {
         Servico.belongsTo(models.Mecanico, {foreignKey: 'id_mecanico'}),
         Servico.belongsTo(models.Veiculo, {foreignKey: 'id_veiculo'}),
-        Servico.belongsTo(models.Catalogo_Servico, {foreignKey: 'id_servico'}),
+        Servico.belongsTo(models.Catalogo, {foreignKey: 'id_catalogo'}),
         Servico.belongsTo(models.Peca, {foreignKey: 'id_peca'}),
         Servico.belongsTo(models.Pagamento, {foreignKey: 'id_pagamento'})
     };

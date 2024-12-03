@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const { Veiculo, Cliente, Pagamento, Servico, Mecanico, Catalogo_servico } = require('../models'); // Importação dos modelos de dados
-const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo } = require('../controllers/mecanicoController');
+const { Veiculo, Cliente, Pagamento, Servico, Peca, Mecanico, Catalogo, Solicitacoes_servico, Solicitacoes_peca} = require('../models'); // Importação dos modelos de dados
+const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos } = require('../controllers/mecanicoController');
 
 
 
@@ -25,7 +25,15 @@ router.get('/veiculo', (req, res) => {
 
 // listar veiculos
 router.get('/veiculos', (req, res) => {
-    listandoVeiculos(req, res);
+    // Recupere os dados do mecânico da sessão
+    const {id} = req.session.mecanico;
+    
+    listandoVeiculos(req, res, id);
+});
+
+// modificar veiculos
+router.get('/veiculos/:id/editar', async (req, res) => {
+    editarVeiculo(req, res);
 });
 
 //cadastro veiculo
@@ -53,126 +61,103 @@ router.get('/cliente', (req, res) => {
 router.get('/clientes', (req, res) => {
     // Recupere os dados do mecânico da sessão
     const {id} = req.session.mecanico;
-
-    const listarClientesMecanico = async(req, res, id) => {
-        try {
-            const clientes = await Cliente.findAll({
-                include: {
-                    model: Pagamento,
-                    include: {
-                        model: Servico,
-                        where: { id_mecanico: id },  // Use o ID do mecânico logado
-                        required: true,
-                    },
-                    required: true
-                }
-            });
-            res.render('cliente/listaClientes', { Cliente: clientes });
-        } catch (error) {
-            console.error('Erro ao listar os clientes: ', error);
-            res.status(500).send("Erro ao listar os Clientes");
-        }
-    }
+    
     listarClientesMecanico(req, res, id);
 });
 
-
+// cadastro clientes
 router.post("/cliente", async(req, res)=>{
-    const { nome, telefone, email, endereco } = req.body;
-
-    try {
-        // Recupere os dados do mecânico da sessão
-        const mecanico = req.session.mecanico;
-        // Salvar no banco de dados
-        await Cliente.create({  nome, telefone, email, endereco  });
-        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
-    } catch (error) {
-        console.error('Erro ao cadastrar Cliente:', error);
-        res.status(500).send('Erro ao cadastrar Cliente');
-    }
+    cadastroCliente(req, res);
 });
 
 // Atualizar cliente
 router.patch('/cliente/:id', async (req, res) => {
-    const { id } = req.params;
-    const { nome, telefone, email } = req.body;
-
-    try {
-        await Cliente.update({ nome, telefone, email }, { where: { id } });
-        res.redirect('/mecanico'); // Redireciona para painel do mecânico
-    } catch (error) {
-        console.error('Erro ao atualizar Cliente:', error);
-        res.status(500).send('Erro ao atualizar cliente');
-    }
+    atualizandoCliente(req, res);
 });
 
 // Deletar cliente
 router.delete('/cliente/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        await Cliente.destroy({ where: { id } });
-        res.redirect('/mecanico'); // Redireciona para painel do mecânico
-    } catch (error) {
-        console.error('Erro ao deletar Cliente:', error);
-        res.status(500).send('Erro ao deletar cliente');
-    }
+    deletaCliente(req, res);
 });
 
 // Serviços
 // Cadastrar serviço
-router.get('/servico', (req, res) => {
-    res.render('servico/cadastroServico');
+router.get('/servico', async(req, res) => {
+    const {id} = req.session.mecanico; // Assume que o usuário está autenticado
+    listarServicos(req, res, id);
 });
 
+//Listando solicitações de serviço
+router.get('/servicos', async(req, res) => {
+    const {id} = req.session.mecanico; // Assume que o usuário está autenticado
+    listandoSolicitacoesServicos(req, res, id);    
+});
+
+// Solicitar servico
 router.post("/servico", async (req, res) => {
-    const { nome_mecanico, modelo_veiculo, nome_servico, nome_peca, id_pagamento, descricao, status } = req.body;
-
+    const { id_mecanico, id_catalogo, id_veiculo, id_peca, pagamento, desconto, descricao } = req.body;
+    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
     try {
-        // Buscar o ID do mecânico pelo nome
-        const mecanico = await Mecanico.findOne({ where: { nome: nome_mecanico } });
-        if (!mecanico) {
-            return res.status(404).send('Mecânico não encontrado');
-        }
-
-        // Buscar o ID do veículo pelo modelo
-        const veiculo = await Veiculo.findOne({ where: { modelo: modelo_veiculo } });
-        if (!veiculo) {
-            return res.status(404).send('Veículo não encontrado');
-        }
-
-        // Buscar o ID do serviço pelo nome
-        const servicoCatalogo = await Catalogo_servico.findOne({ where: { nome: nome_servico } });
-        if (!servicoCatalogo) {
-            return res.status(404).send('Serviço não encontrado no catálogo');
-        }
-
-        // Buscar o ID da peça pelo nome (se fornecido)
-        let peca = null;
-        if (nome_peca) {
-            peca = await Peca.findOne({ where: { nome: nome_peca } });
-            if (!peca) {
-                return res.status(404).send('Peça não encontrada');
-            }
-        }
-
-        // Salvar no banco de dados
-        await Servico.create({
-            id_mecanico: mecanico.id,
-            id_veiculo: veiculo.id,
-            id_servico: servicoCatalogo.id,
-            id_peca: peca ? peca.id : null, // Se a peça foi encontrada, use o ID dela, caso contrário, use null
-            id_pagamento,
+        await Solicitacoes_servico.create({
+            id_mecanico,
+            id_veiculo,
+            id_peca,
+            id_catalogo,
+            tipo_pagamento: pagamento,
+            desconto,
             descricao,
-            status
+            status: 'PENDENTE' // Sempre começa como pendente
         });
-
-        res.render('/');  // Redireciona para painel do mecânico
+        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
     } catch (error) {
-        console.error('Erro ao cadastrar Serviço:', error);
-        res.status(500).send('Erro ao cadastrar Serviço');
+        console.error(error);
+        res.status(500).send('Erro ao criar a solicitação de serviço');
     }
 });
+
+// PECAS----------------------------------------------------------------------------------------------------------------------------------------
+// Solicitar pecas
+router.get('/peca', async (req, res) => { 
+    const pecas = await Peca.findAll();
+    res.render('peca/cadastroPeca', {pecas});
+});
+
+// Listar pecas
+router.get('/pecas', async (req, res) => {
+    try {
+        const pecas = await Solicitacoes_peca.findAll({
+            include: [
+                { model: Mecanico },
+            ]
+        });
+        const gerente = false;
+        res.render('peca/listaPeca', { pecas, gerente });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de peças: ', error);
+        res.status(500).send('Erro ao listar as solicitações de peças');
+    }
+});
+
+//Cadastro de Solicitação de pecas
+router.post('/pecas', async (req, res) => {
+    const { nome, descricao, preco } = req.body;
+    const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
+    try {
+        await Solicitacoes_peca.create({
+            id_mecanico:mecanico.id,
+            nome,
+            descricao,
+            preco,
+            status: 'PENDENTE' // Sempre começa como pendente
+        });
+        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao criar a solicitação de peça');
+    }
+});
+
+
 
 // Atualizar serviço
 router.patch('/servicos/:id', async (req, res) => {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -30,6 +30,75 @@
         <input type="text" id="status" name="status" required>
         <br>
         <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Solicitação de Serviço</title>
+</head>
+<body>
+    <h1>Criar Solicitação de Serviço</h1>
+    <form action="/mecanico/servico" method="POST">
+
+        <!-- Seleção do catálogo -->
+        <label for="id_catalogo">Catálogo de Serviços:</label>
+        <select name="id_catalogo" id="id_catalogo" required>
+            <% catalogos.forEach(catalogo => { %>
+                <option value="<%= catalogo.id %>"><%= catalogo.nome %></option>
+            <% }); %>
+        </select>
+        <br>
+
+       <!-- Seleção do Veiculo -->
+       <label for="id_veiculo">Veiculos:</label>
+       <select name="id_veiculo" id="id_veiculo" required>
+           <% veiculos.forEach(veiculo => { %>
+               <option value="<%= veiculo.id %>"><%= veiculo.modelo %><%= veiculo.marca %></option>
+           <% }); %>
+       </select>
+       <br>
+
+        <!-- Seleção da Peca -->
+        <label for="id_peca">Pecas:</label>
+        <select name="id_peca" id="id_peca" required>
+            <% pecas.forEach(peca => { %>
+                <option value="<%= peca.id %>"><%= peca.nome %></option>
+            <% }); %>
+        </select>
+        <br>
+
+        <section>
+            <!-- Criação de pagamento -->
+            <label for="pagamento">Pagamento:</label>
+            <select name="pagamento" id="pagamento" required>
+                <option value="0">Crédito</option>
+                <option value="1">Débito</option>
+                <option value="2">Dinheiro/PIX</option>
+            </select>
+            <br>
+        </section>
+        
+        <section>
+            <!-- Criação de pagamento -->
+            <label for="desconto">Desconto (em porcentagem):</label>
+            <input type="number" name="desconto" id="desconto" required>
+            <br>
+        </section>
+
+        <!-- Descrição -->
+        <label for="descricao">Descrição:</label>
+        <textarea name="descricao" id="descricao" rows="4" required></textarea>
+        <br>
+
+        <!-- Identificação do mecânico -->
+        <input type="hidden" name="id_mecanico" value="<%= mecanico.id %>">
+
+        <!-- Botão de envio -->
+        <button type="submit">Criar Solicitação</button>
     </form>
 </body>
 </html>

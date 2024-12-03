@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Solicitação de Pecas</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <h1>Solicitar pecas</h1>
+
+    <p>Antes de solicitar veja se pecas ja possui cadastro na nossa base de dados:</p>
+     <!-- Listagem pecas -->
+    <label for="id_peca">Catálogo de Pecas:</label>
+    <select name="id_peca" id="id_peca" required>
+        <% pecas.forEach(peca => { %>
+            <option value="<%= peca.id %>"><%= peca.nome %><%=peca.preco%></option>
+        <% }); %>
+    </select>
+    <br>
+    <p>Criacao da solicitacao</p>
+    <form action="/mecanico/pecas" method="POST">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" required>
+        <br>
+        <label for="descricao">Descricao:</label>
+        <input type="text" name="descricao" id="descricao" required>
+        <br>
+        <label for="preco">Preco:</label>
+        <input type="number" name="preco" id="preco" required>
+        <br>
+        <button type="submit">Solicitar</button>
+</body>
+</html>
