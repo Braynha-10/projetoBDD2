@@ -57,7 +57,7 @@
                 <th>Descrição</th>
                 <th>Preco</th>
                 <th>Status</th>
-                <% if (gerente==="gerente") { %>
+                <% if (gerente) { %>
                 <th>Modifica status</th>
                 <% } %>
             </tr>
@@ -70,7 +70,7 @@
                     <td><%= peca.descricao %></td>
                     <td><%= peca.preco%></td>
                     <td><%= peca.status %></td>
-                    <% if (gerente==="gerente") { %>
+                    <% if (gerente) { %>
                         <td><form action="gerente/pecas" method="post">
                             <select name="" id="status">
                                 <option value="pendente">Pendente</option>

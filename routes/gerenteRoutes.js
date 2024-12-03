@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const { Mecanico } = require('../models');
+const { Mecanico, Solicitacoes_peca } = require('../models');
 const gerenteController = require('../controllers/gerenteController')
 
 
@@ -44,6 +44,21 @@ router.get('/mecanico/listar', gerenteController.listarMecanicos);
 //Rotas Controle das Pecas
 router.get('/pecas/cadastro', async (req, res) => {
     res.render('pecas/cadastro');
+});
+
+router.get('/pecas/solicitacoes', async (req, res) => { 
+    try {
+        const pecas = await Solicitacoes_peca.findAll({
+            include: [
+                { model: Mecanico },
+            ]
+        });
+        const gerente = true
+        res.render('peca/listaPeca', { pecas, gerente });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de peças: ', error);
+        res.status(500).send('Erro ao listar as solicitações de peças');
+    }
 });
 
 router.post('/pecas/cadastro', gerenteController.cadastrarPeca);
