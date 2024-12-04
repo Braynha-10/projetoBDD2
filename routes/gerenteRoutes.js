@@ -67,13 +67,19 @@ router.post('/pecas/cadastro', gerenteController.cadastrarPeca);
 
 router.get('/pecas/listar', gerenteController.listarPeca);
 
+router.get('/pecas/modifica/:id', gerenteController.getModificaPeca);
+
+router.patch('/pecas/modifica/:id', gerenteController.modificaPeca);
+
+router.delete('/pecas/deletar/:id', gerenteController.deletarPeca);
+
 
 //Rotas Controle Servicos
 router.get('/servicos/listar', gerenteController.listarServico);
 router.get('/servicos/solicitacoes', gerenteController.listarSolicitacoesServicos);
 router.post('/servicos/solicitacoes', gerenteController.processarSolicitacaoServicos);
 
-router.get('/servicos/listarServicos', gerenteController.listarServico)
+// router.get('/servicos/listarServicos', gerenteController.listarServico);
 
 //Rotas Controle Gerente
 router.get('/gerentes/listar', gerenteController.listarGerente);

@@ -25,8 +25,8 @@
                     <td><%= clientes.email %></td>
                     <td><%= clientes.endereco %></td>
                     <td>
-                        <a href="/mecanico/clientes/<%= Cliente.id %>/editar">Editar</a>
-                        <form action="/mecanico/clientes/<%= Cliente.id %>?_method=DELETE" method="POST" style="display:inline;">
+                        <a href="/mecanico/cliente/<%= clientes.id %>/editar">Editar</a>
+                        <form action="/mecanico/clientes/<%= clientes.id %>?_method=DELETE" method="POST" style="display:inline;">
                             <button type="submit">Deletar</button>
                         </form>
                     </td>

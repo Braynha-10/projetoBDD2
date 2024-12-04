@@ -149,6 +149,23 @@ exports.editarVeiculo = async(req, res) => {
     }
 };
 
+exports.editarCliente = async(req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Buscar o veículo pelo ID
+        const cliente = await Cliente.findByPk(id);
+        if (!cliente) {
+            return res.status(404).send('Cliente não encontrado');
+        }
+        // Renderizar a view de edição com os dados do veículo
+        res.render('cliente/editarCliente', { cliente: cliente });
+    } catch (error) {
+        console.error('Erro ao buscar cliente:', error);
+        res.status(500).send('Erro ao buscar cliente');
+    }
+};
+
 exports.atualizandoVeiculo = async(req, res) => {
     const { id } = req.params;
     const { modelo, marca, ano, id_cliente } = req.body;

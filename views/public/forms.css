@@ -16,7 +16,10 @@ label {
     font-weight: bold;
     margin-top: 10px;
 }
-
+.home{
+  margin: 5px;
+  padding: 5px;
+}
 .botao {
     display: inline-block; /* Permite ajustar padding e dimensões */
     color: #000000; /* Cor do texto */

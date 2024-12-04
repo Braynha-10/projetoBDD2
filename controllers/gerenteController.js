@@ -64,7 +64,7 @@ const cadastrarPeca = async(req, res) => {
         const user = await Peca.findOne({where: {nome: nome}});
         if(!user){
             await Peca.create({nome, descricao, preco});
-            res.render('/gerente/painelGerente.ejs')
+            res.render('gerente/painelGerente.ejs');
         } else {
             res.send('<h1>Ja existe uma peca cadastrada com esse nome!</h1>')
         }
@@ -84,6 +84,52 @@ const listarPeca = async (req, res) => {
     }
 }
 
+const getModificaPeca = async(req, res) => {
+    const {id} = req.params;
+    if(!id){
+        return res.render('pecas/cadastro');
+    }
+    try{
+        const peca = await Peca.findByPk(id);
+        
+        if(!peca){
+            return res.status(404).send('Peca nao encontrada!');
+        }
+        console.log(peca.id)
+        res.render('pecas/cadastro', {peca});
+    } catch (error){
+        console.error('Erro ao buscar peca: ', error);
+        res.status(500).json({error: 'Erro ao buscar peca'});
+    }
+}
+
+const modificaPeca = async(req,res) => {
+    const {id} = req.params;
+    const {nome, descricao, preco} = req.body;
+
+    try {
+        const peca = await Peca.findByPk(id);
+        if (!peca) {
+            res.status(404).json({error: "peca nao encontrada!"})
+        }
+        await peca.update({nome, descricao, preco});
+        res.render('gerente/painelGerente');
+    } catch (error){
+        console.error('Erro ao atualizar peca: ', error);
+        res.status(500).json({ error: 'Erro ao atualizar peca' });
+    }
+}
+
+const deletarPeca = async (req, res) => {
+    const {id} = req.params;
+    try {
+        Peca.destroy({where: {id: id}});
+        res.render('gerente/painelGerente');
+    } catch (error) { 
+        console.error('Erro ao deletar peca: ', error);
+        res.status(500).json({error: 'Erro ao deletar peca'}); 
+    }
+}
 
 
 const listarServico = async(req,res) => {
@@ -309,6 +355,9 @@ module.exports = {
     deletarMecanico, 
     cadastrarPeca, 
     listarPeca, 
+    getModificaPeca,
+    modificaPeca,
+    deletarPeca,
     listarServico, 
     listarGerente, 
     cadastrarGerente, 
