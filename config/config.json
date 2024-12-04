@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "root",
+    "password": "bdssc16$",
     "database": "bdd_mecanica",
     "host": "localhost",
     "dialect": "mysql"

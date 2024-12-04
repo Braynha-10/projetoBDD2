@@ -4,23 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Gerente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- CSS Específico -->
+    <link rel="stylesheet" href="../public/painel.css">
 </head>
 <body>
-    <h1>Painel do Gerente</h1>
-    <p><a href="/gerente/mecanico/cadastro">Cadastro mecanico</a></p>
-    <p><a href="/gerente/mecanico/listar">listar mecanicos para folha salarial</a></p>
-    <p>excluir mecanico -> FEITO NA LISTAGEM</p>
-    <p>modificar mecanico -> FEITO NA LISTAGEM</p> 
-    <p><a href="/gerente/gerentes/cadastro">cadastro gerente</a></p>
-    <p><a href="/gerente/gerentes/listar">listar gerente</a></p>
-    <p>excluir gerente e modificar gerente</p>
-    <p><a href="/gerente/pecas/cadastro">Cadastro de pecas</a></p> 
-    <p><a href="/gerente/pecas/listar">Listar Pecas</a></p>
-    <p>acesso aos pedidos de pecas mas isso depois</p>
-    <p><a href="/gerente/servicos/listar">listagem dos servico para balanceamento dos lucro e custo</a></p>
-    <p>Listagem de solicitações de pecas <a href="/gerente/pecas/solicitacoes">Clique aqui</a></p>
-    <p>Listar as solicitacoes de servico <a href="/gerente/servicos/solicitacoes">Clique Aqui</a></p>
-    <p>Listar os servicos <a href="/gerente/servicos/listarServicos">Clique Aqui</a></p>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="container text-center">
+            <h1>Painel do Gerente</h1>
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <p>Cadastro mecânico <a class="botao" href="/gerente/mecanico/cadastro">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listar mecânicos para folha salarial <a class="botao" href="/gerente/mecanico/listar">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Cadastro gerente <a class="botao" href="/gerente/gerentes/cadastro">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listar gerentes <a class="botao" href="/gerente/gerentes/listar">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Cadastro de peças <a class="botao" href="/gerente/pecas/cadastro">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listar peças <a class="botao" href="/gerente/pecas/listar">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listagem dos serviços para balanceamento de lucro e custo <a class="botao" href="/gerente/servicos/listar">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listagem de solicitações de peças <a class="botao" href="/gerente/pecas/solicitacoes">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listar solicitações de serviço <a class="botao" href="/gerente/servicos/solicitacoes">Clique aqui</a></p>
+                </div>
+                <div class="col-12 mb-2">
+                    <p>Listar serviços <a class="botao" href="/gerente/servicos/listarServicos">Clique aqui</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Link para o JavaScript do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

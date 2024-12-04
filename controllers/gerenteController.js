@@ -1,4 +1,5 @@
 const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo, Gerente, Cliente, Solicitacoes_peca, Solicitacoes_servico, sequelize } = require('../models');
+const { get } = require('../routes/gerenteRoutes');
 
 
 //Metodos Mecanico
@@ -153,9 +154,12 @@ const atualizarGerente = async(req,res) => {
 
 const getEditarGerente = async(req, res) => {
     const {id} = req.params;
-
+    if(!id){
+        return res.render('gerente/cadastro');
+    }
     try{
         const gerente = await Gerente.findByPk(id);
+        
         if(!gerente){
             return res.status(404).send('Gerente nao encontrado!');
         }

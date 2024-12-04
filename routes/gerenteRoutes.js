@@ -79,7 +79,8 @@ router.get('/servicos/listarServicos', gerenteController.listarServico)
 router.get('/gerentes/listar', gerenteController.listarGerente);
 
 router.get('/gerentes/cadastro', async (req, res) => {
-    res.render('gerente/cadastro');
+    const gerente = null;
+    res.render('gerente/cadastro', {gerente});
 });
 router.post('/gerentes/cadastro', gerenteController.cadastrarGerente);
 router.delete('/gerentes/deletar/:id', gerenteController.deletarGerente);
