@@ -26,10 +26,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      id_servico: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
+      // id_servico: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false
+      // },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false

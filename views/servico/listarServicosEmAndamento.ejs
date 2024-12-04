@@ -60,53 +60,74 @@
     <script src='main.js'></script>
 </head>
 <body>
-    <h1>Lista de solicitações</h1>
+    <h1>Lista de Servicos</h1>
     <table>
         <thead>
             <tr>
                 <th>Mecanico</th>
                 <th>Veiculo</th>
+                <th>Cliente</th>
                 <th>Nome da Peça</th>
-                <th>Tipo de Pagamento</th>
-                <th>Desconto</th>
                 <th>Nome do Serviço</th>
                 <th>Descrição</th>
                 <th>Status</th>
-                <% if (gerente===true) { %>
                 <th>Modifica status</th>
-                <% } %>
+
             </tr>
         </thead>
         <tbody>
-            <% Servico.forEach(servico => { %>
+            <% Servicos.forEach(servico => { %>
                 <tr>
                     <td><%= servico.Mecanico.nome%></td>
                     <td><%= servico.Veiculo.modelo %></td>
-                    <td><%= servico.Peca.nome  || ""%></td>
-                    <% if(servico.tipo_pagamento == 0) {%>
-                        <td>Credito</td>
-                    <% } else if (servico.tipo_pagamento == 1) {%>
-                        <td>Debito</td>
-                    <% } else if(servico.tipo_pagamento == 2) { %>  
-                        <td>Dinheiro/PIX</td>
-                    <% } %> 
-                    <td><%= servico.desconto %></td>
+                    <td><%= servico.Veiculo.Cliente.nome %></td>
+                    <td><%= servico.Peca.nome %></td>
                     <td><%= servico.Catalogo.nome%></td>
                     <td><%= servico.descricao %></td>
                     <td><%= servico.status %></td>
-                    <% if (gerente===true) { %>
-                        <td><form action="/gerente/servicos/solicitacoes" method="post">
-                            <input type="hidden" name="idServico" id="idServico" value="<%= servico.id %>">
-                            <select name="status" id="status" class="<%= servico.status === 'APROVADO' ? 'select-hidden' : '' %>">
-                                <option value="APROVADO">Aprovar</option>
-                                <option value="RECUSADO">Recusar</option>
-                            </select>
-                            <button type="submit" class="<%= servico.status === 'APROVADO' ? 'disabled' : '' %>">Alterar</button>
-                        </form></td>
-                    <% } %>
+
+                    <td>
+                        <button type="submit" onclick="openModal(<%= servico.id %>)">Finalizar Servico</button>
+                    </td>
+
                 </tr>
             <% }); %>
         </tbody>
     </table>
 </body>
+
+
+<!-- Modal Deletar-->
+<div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center;">
+    <div style="background: #fff; padding: 20px; border-radius: 8px; width: 300px; text-align: center;">
+        <h3>Confirmar fim de servico?</h3>
+        <p>Tem certeza que deseja finalizar este servico?</p>
+        <form id="editForm" method="POST" style="margin-top: 20px;">
+            <input type="hidden" name="_method" value="PATCH">
+            <button type="submit" style="margin-right: 10px;">Sim</button>
+            <button type="button" onclick="closeModal()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
 </html>
+
+
+
+<script>
+    const openModal = (servicoId) => {
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        editForm.action = `/mecanico/servico/listarServicos/FinalizarServico/${servicoId}?_method=PATCH`;        
+        editModal.style.display = 'flex';
+    };
+
+    const closeModal = () => {
+        const editModal = document.getElementById('editModal');
+        editModal.style.display = 'none';
+    };
+</script>

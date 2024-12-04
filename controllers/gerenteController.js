@@ -1,4 +1,4 @@
-const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo_Servico, Gerente, Cliente, Solicitacoes_peca, Solicitacoes_servico, sequelize } = require('../models');
+const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo, Gerente, Cliente, Solicitacoes_peca, Solicitacoes_servico, sequelize } = require('../models');
 
 
 //Metodos Mecanico
@@ -89,14 +89,14 @@ const listarServico = async(req,res) => {
     try{
         const servicos = await Servico.findAll({
             include: [
+                {model:Veiculo, include: Cliente},
                 {model:Mecanico},
-                {model:Veiculo},
-                {model:Catalogo_Servico},
                 {model:Peca},
-                {model:Pagamento}
+                {model:Pagamento},
+                {model:Catalogo},
             ]
         });
-        res.render('servicos/listar', {servicos}); 
+        res.render('servico/listaServicos', {Servico: servicos, gerente: false}); 
     } catch(error){
         console.error('Erro ao listar as servicos: ', error);
         res.status(500).json({error: "Erro ao listar Servicos"})
@@ -220,6 +220,78 @@ const processarSolicitacaoPeca = async (req, res) => {
 }
 
 
+const listarSolicitacoesServicos = async (req, res) =>{
+    try {
+        const servicos = await Solicitacoes_servico.findAll({
+            include: [
+                { model: Veiculo, include: Cliente },
+                {model: Catalogo},
+                {model: Peca},
+                {model: Mecanico},
+            ]
+        });
+        const gerente = true
+        res.render('servico/listaServicos', { Servico: servicos, gerente });
+    } catch (error) {
+        console.error('Erro ao listar as solicitações de serviço: ', error);
+        res.status(500).send("Erro ao listar as solicitações de serviço");
+    }
+}
+
+const processarSolicitacaoServicos = async (req, res) => {
+    const {idServico, status} = req.body;
+
+    const transaction = await sequelize.transaction();
+    const solicitacaoServico = await Solicitacoes_servico.findByPk(idServico, {
+        include: [
+            {model: Veiculo, include: Cliente},
+            {model: Catalogo},
+            {model: Peca},
+            {model: Mecanico},
+        ]
+    });
+    if(!solicitacaoServico){
+        return res.status(404).send('Solicitacao de Servico nao encontrada!');
+    }
+    if(status === "APROVADO"){
+        try {
+            const novoPagamento = await Pagamento.create({
+                /*tipoPagamento, valor, desconto, id_cliente, status(boolean)*/
+                tipo: solicitacaoServico.tipo_pagamento,
+                valor: parseFloat(solicitacaoServico.Peca.preco) + parseFloat(solicitacaoServico.Catalogo.preco),
+                desconto: solicitacaoServico.desconto,
+                id_cliente: solicitacaoServico.Veiculo.id_cliente,
+                status: false,
+            }, {transaction})
+
+            const novoServico = await Servico.create({
+                id_mecanico: solicitacaoServico.id_mecanico,
+                id_veiculo: solicitacaoServico.id_veiculo,
+                id_catalogo: solicitacaoServico.id_catalogo,
+                id_peca:solicitacaoServico.id_peca || null,
+                id_pagamento: novoPagamento.id,
+                descricao: solicitacaoServico.descricao,
+                status: 'Pendente',
+            })
+
+            solicitacaoServico.status = 'APROVADO';
+            await solicitacaoServico.save({transaction});
+            await transaction.commit();
+            
+            res.redirect("/gerente/servicos/solicitacoes");
+
+        } catch (error) {
+            await transaction.rollback();
+                return res.status(500).json({error: error.message})
+        } 
+    } else {
+        solicitacaoServico.status = 'RECUSADO';
+        await solicitacaoServico.save({transaction});
+        await transaction.commit();
+        res.redirect("/gerente/servicos/solicitacoes");
+    }
+}
+
 
 module.exports = {
     listarMecanicos, 
@@ -234,5 +306,7 @@ module.exports = {
     atualizarGerente, 
     getEditarGerente, 
     deletarGerente,
-    processarSolicitacaoPeca
+    processarSolicitacaoPeca,
+    listarSolicitacoesServicos,
+    processarSolicitacaoServicos,
 };

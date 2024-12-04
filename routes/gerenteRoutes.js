@@ -70,6 +70,10 @@ router.get('/pecas/listar', gerenteController.listarPeca);
 
 //Rotas Controle Servicos
 router.get('/servicos/listar', gerenteController.listarServico);
+router.get('/servicos/solicitacoes', gerenteController.listarSolicitacoesServicos);
+router.post('/servicos/solicitacoes', gerenteController.processarSolicitacaoServicos);
+
+
 
 //Rotas Controle Gerente
 router.get('/gerentes/listar', gerenteController.listarGerente);

@@ -251,24 +251,76 @@ exports.deletaCliente = async(req, res) => {
 }	
 
 // Serviços --------------------------------------------------------------------------------------------------------------------------------------
+exports.listarServicosEmAndamento = async(req, res) => {
+    const {id} = req.session.mecanico;
+    try {
+        const servicos = await Servico.findAll({
+            where: {id_mecanico: id, status: 'Pendente'},
+            include: [
+                { model: Veiculo, include: Cliente },
+                {model: Catalogo},
+                {model: Peca},
+                {model: Mecanico},
+            ]
+        })
+        // console.log(servicos);
+
+        if(!servicos){
+            return  res.status(404).send('Sem servicos para este cliente');
+        }
+
+        res.render('servico/listarServicosEmAndamento', {Servicos: servicos})
+    } catch (error) {
+        console.error('Erro ao encontrar servicos:', error);
+        res.status(500).send('Erro ao encontrar servicos');
+    }
+}
+
+
+exports.finalizarServicosEmAndamento = async(req, res) => {
+    const {id} = req.params;
+    try {
+        const servico = await Servico.findByPk(id);
+        if(!servico){
+            return res.status(404).send('Servico nao encontrado!');
+        }
+        await servico.update({status: "Finalizado"})
+        res.redirect('/mecanico/servico/listarServicos')
+    } catch (error) {
+    
+        console.error('Erro ao atualizar Servico: ', error);
+        res.status(500).json({ error: 'Erro ao atualizar Servico' });
+     
+    }
+}
+
+
+
 exports.listarServicos = async(req, res, id) => {  
     try {
         const catalogos = await Catalogo.findAll(); // Busca todos os serviços do catálogo
+        // const veiculos = await Veiculo.findAll({
+        //     include: {
+        //         model: Cliente,
+        //         include: {
+        //             model: Pagamento,
+        //             include: {
+        //                 model: Servico,
+        //                 where: { id_mecanico: id },  // Use o ID do mecânico logado
+        //                 required: true,
+        //             },
+        //             required: true            
+        //         },
+        //         required: true
+        //     },
+        // });
         const veiculos = await Veiculo.findAll({
             include: {
-                model: Cliente,
-                include: {
-                    model: Pagamento,
-                    include: {
-                        model: Servico,
-                        where: { id_mecanico: id },  // Use o ID do mecânico logado
-                        required: true,
-                    },
-                    required: true            
-                },
-                required: true
-            },
-        });
+                model: Servico, 
+                where: { id_mecanico: id},
+                required: true,
+            }
+        })
         const pecas = await Peca.findAll();
         const mecanico = req.session.mecanico; // Assume que o usuário está autenticado
         

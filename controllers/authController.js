@@ -17,7 +17,7 @@ exports.loginGerente = async (req, res) => {
             return res.status(401).json({ error: 'Senha incorreta' });
         }
 
-        const token = jwt.sign({ id: user.id, userType: 'gerente' }, 'seu_segredo_jwt', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, userType: 'gerente' }, 'seu_segredo_jwt', { expiresIn: '24h' });
 
         req.session.gerente = user;
 
@@ -42,7 +42,7 @@ exports.loginMecanico = async (req, res) => {
             return res.status(401).json({ error: 'Senha incorreta' });
         }
 
-        const token = jwt.sign({ id: user.id, userType: 'mecanico' }, 'seu_segredo_jwt', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, userType: 'mecanico' }, 'seu_segredo_jwt', { expiresIn: '24h' });
 
 
         // Armazene os dados do mecânico na sessão

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 const { Veiculo, Cliente, Pagamento, Servico, Peca, Mecanico, Catalogo, Solicitacoes_servico, Solicitacoes_peca} = require('../models'); // Importação dos modelos de dados
-const { listandoVeiculos, cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos, solicitarServico, listarSolitacoesPecas, solicitarPeca } = require('../controllers/mecanicoController');
+const { listandoVeiculos, listarServicosEmAndamento, finalizarServicosEmAndamento,cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos, solicitarServico, listarSolitacoesPecas, solicitarPeca } = require('../controllers/mecanicoController');
 
 
 
@@ -81,6 +81,11 @@ router.delete('/cliente/:id', async (req, res) => {
 });
 
 // Serviços
+// Listagem de serviços em andamento
+router.get('/servico/listarServicos', listarServicosEmAndamento);
+
+router.patch('/servico/listarServicos/finalizarServico/:id', finalizarServicosEmAndamento);
+
 // Cadastrar serviço
 router.get('/servico', async(req, res) => {
     const {id} = req.session.mecanico; // Assume que o usuário está autenticado
