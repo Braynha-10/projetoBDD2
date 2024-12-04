@@ -98,7 +98,7 @@ exports.listandoVeiculos = async(req, res, id) => {
             include: {
                 model: Cliente,
                 include: {
-                    model: Pagamento,
+                    model: Veiculo,
                     include: {
                         model: Servico,
                         where: { id_mecanico: id },  // Use o ID do mecânico logado
@@ -181,14 +181,14 @@ exports.deletaVeiculo = async(req, res) => {
 exports.listarClientesMecanico = async(req, res, id) => {
     try {
         const clientes = await Cliente.findAll({
-            include: {
-                model: Pagamento,
+            include:{
+                model: Veiculo,
                 include: {
                     model: Servico,
                     where: { id_mecanico: id },  // Use o ID do mecânico logado
                     required: true,
                 },
-                required: true
+                required: true   
             }
         });
         res.render('cliente/listaClientes', { Cliente: clientes });

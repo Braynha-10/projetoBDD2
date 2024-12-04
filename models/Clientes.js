@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Cliente.associate = function(models) {
         Cliente.hasMany(models.Pagamento, { foreignKey: 'id_cliente' });
+        Cliente.hasMany(models.Veiculo, {foreignKey: 'id_cliente'});
     };
 
     return Cliente;

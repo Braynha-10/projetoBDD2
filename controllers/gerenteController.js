@@ -92,11 +92,13 @@ const listarServico = async(req,res) => {
                 {model:Veiculo, include: Cliente},
                 {model:Mecanico},
                 {model:Peca},
-                {model:Pagamento},
+                // {model:Pagamento},
                 {model:Catalogo},
             ]
         });
-        res.render('servico/listaServicos', {Servico: servicos, gerente: false}); 
+        console.log(JSON.stringify(servicos, null, 2));
+
+        res.render('servicos/listar', {servicos, gerente: false}); 
     } catch(error){
         console.error('Erro ao listar as servicos: ', error);
         res.status(500).json({error: "Erro ao listar Servicos"})
@@ -291,6 +293,9 @@ const processarSolicitacaoServicos = async (req, res) => {
         res.redirect("/gerente/servicos/solicitacoes");
     }
 }
+
+
+
 
 
 module.exports = {
