@@ -1,21 +1,53 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/authMiddleware');
 const { Veiculo, Cliente, Pagamento, Servico, Peca, Mecanico, Catalogo, Solicitacoes_servico, Solicitacoes_peca} = require('../models'); // Importação dos modelos de dados
 const { listandoVeiculos, listarServicosEmAndamento, finalizarServicosEmAndamento,cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos, solicitarServico, listarSolitacoesPecas, solicitarPeca, editarCliente } = require('../controllers/mecanicoController');
 
+// router.get('/', authMiddleware, (req, res) => {
+//     if (req.user.userType !== 'mecanico') {
+//         return res.status(403).json({ error: 'Acesso negado' });
+//     }
 
+//     // Recupere os dados do mecânico da sessão
+//     const mecanico = req.session.mecanico;
+//     res.render('mecanico/painelMecanico', {Mecanico: mecanico});
+// });
 
-router.get('/', authMiddleware, (req, res) => {
-    if (req.user.userType !== 'mecanico') {
-        return res.status(403).json({ error: 'Acesso negado' });
-    }
-
-    // Recupere os dados do mecânico da sessão
-    const mecanico = req.session.mecanico;
-    res.render('mecanico/painelMecanico', {Mecanico: mecanico});
+router.get('/', (req, res) => {
+    res.render('mecanico/loginMecanico');
 });
 
+router.post('/', async (req, res) => {
+    const { email, senha } = req.body;
+    console.log('Requisição recebida:', req.body);
+
+    try {
+        // Verifique as credenciais no banco de dados
+        const mecanico = await Mecanico.findOne({ where: { email } });
+
+        if (!mecanico || !bcrypt.compareSync(senha, mecanico.senha)) {
+            return res.status(401).render('mecanico/loginMecanico', { error: 'Credenciais inválidas' });
+        }
+
+        // Salva o mecânico na sessão
+        req.session.mecanico = {
+            id: mecanico.id,
+            email: mecanico.email,
+            nome: mecanico.nome,
+        };
+
+        // Renderiza o painel do mecânico
+        res.render('mecanico/painelMecanico', { Mecanico: mecanico.nome });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
+// Proteger todas as rotas abaixo
+router.use(authMiddleware);
 // Veiculos --------------------------------------------------------------------------------------------------------------------------------------
 
 // Home veiculo
@@ -151,6 +183,22 @@ router.delete('/servicos/:id', async (req, res) => {
         console.error('Erro ao deletar Serviço:', error);
         res.status(500).send('Erro ao deletar serviço');
     }
+});
+
+// Logout
+router.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.render('index');
+});
+
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro ao encerrar a sessão' });
+        }
+        res.clearCookie('connect.sid'); // Limpa o cookie da sessão
+        res.json({ message: 'Logout realizado com sucesso' });
+    });
 });
 
 module.exports = router;

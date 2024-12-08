@@ -1,20 +1,15 @@
-const jwt = require('jsonwebtoken');
-
 const authMiddleware = (req, res, next) => {
-    // const token = req.header('Authorization')?.replace('Bearer ', '');
-    const token = req.query.token;
-
-    if (!token) {
-        return res.status(401).json({ error: 'Acesso negado. Token não fornecido.' });
+    if (!req.session.mecanico) {
+        mecanico = false;
+        res.render("errorPage", {mecanico});
+        // return res.status(401).json({ error: 'Acesso negado para mecanico. Por favor, faça login.' });
     }
-
-    try {
-        const decoded = jwt.verify(token, 'seu_segredo_jwt');
-        req.user = decoded;
-        next();
-    } catch (error) {
-        res.status(400).json({ error: 'Token inválido.' });
+    if (!req.session.gerente) {
+        gerente = false;
+        res.render("errorPage", {gerente});
+        // return res.status(401).json({ message: 'Acesso negado para gerente. Por favor, faça login.' });
     }
+    next();
 };
 
 module.exports = authMiddleware;

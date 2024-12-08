@@ -1,18 +1,52 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/authMiddleware');
-const { Mecanico, Solicitacoes_peca } = require('../models');
+const { Mecanico, Solicitacoes_peca, Gerente } = require('../models');
 const gerenteController = require('../controllers/gerenteController')
 
+// router.get('/', authMiddleware, (req, res) => {
+//     if (req.user.userType !== 'gerente') {
+//         return res.status(403).json({ error: 'Acesso negado' });
+//     }
 
-router.get('/', authMiddleware, (req, res) => {
-    if (req.user.userType !== 'gerente') {
-        return res.status(403).json({ error: 'Acesso negado' });
-    }
+//     res.render('gerente/painelGerente');
+// });
 
-    res.render('gerente/painelGerente');
+router.get('/', (req, res) => {
+    res.render('gerente/loginGerente');
 });
 
+router.post('/', async (req, res) => {
+    const { email, senha } = req.body;
+    console.log('Requisição recebida:', req.body);
+
+    try {
+        // Verifique as credenciais no banco de dados
+        const gerente = await Gerente.findOne({ where: { email } });
+
+        //confere e covalida a senha encriptografada 
+        if (!gerente || !bcrypt.compareSync(senha, gerente.senha)) {
+            return res.status(401).render('gerente/loginGerente', { error: 'Credenciais inválidas' });
+        }
+
+        // Salva o gerente na sessão
+        req.session.gerente = {
+            id: gerente.id,
+            email: gerente.email,
+            nome: gerente.nome,
+        };
+
+        // Renderiza o painel do gerente
+        res.render('gerente/painelGerente', { gerente });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
+// Proteger todas as rotas abaixo
+router.use(authMiddleware);
 
 //Rotas Controle do Mecanico
 router.get('/mecanico/cadastro', async (req, res) => {
