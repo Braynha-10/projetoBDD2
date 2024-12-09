@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const authMiddleware = require('../middlewares/authMiddleware');
+const {authMiddleware} = require('../middlewares/authMiddleware');
 const { Veiculo, Cliente, Pagamento, Servico, Peca, Mecanico, Catalogo, Solicitacoes_servico, Solicitacoes_peca} = require('../models'); // Importação dos modelos de dados
 const { listandoVeiculos, listarServicosEmAndamento, finalizarServicosEmAndamento,cadastroVeiculo, atualizandoVeiculo, deletaVeiculo, cadastroCliente, atualizandoCliente, deletaCliente, editarVeiculo, listarClientesMecanico, listarServicos, listandoSolicitacoesServicos, solicitarServico, listarSolitacoesPecas, solicitarPeca, editarCliente } = require('../controllers/mecanicoController');
 
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
         };
 
         // Renderiza o painel do mecânico
-        res.render('mecanico/painelMecanico', { Mecanico: mecanico.nome });
+        res.render('mecanico/painelMecanico', { mecanico });
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro interno do servidor');

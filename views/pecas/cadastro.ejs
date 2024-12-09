@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="<%= peca ? `/gerente/pecas/modifica/${peca.id}?_method=PATCH` : '/gerente/pecas/cadastro' %>" method="<%= peca ? 'post' : 'post' %>"> <!-- Gerenciado pela entidade Gerente-->
+    <form action="<%= peca ? `/gerente/pecas/modifica/${peca.id}?_method=PATCH` : '/gerente/pecas/cadastro' %>" method="<%= peca ? 'post' : 'post' %>"> Gerenciado pela entidade Gerente
         <input type="hidden" name="_method" value="<%= peca ? 'PATCH' : 'POST' %>">
 
         <label for="nome">Nome:

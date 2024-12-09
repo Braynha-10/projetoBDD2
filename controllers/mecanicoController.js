@@ -125,7 +125,7 @@ exports.cadastroVeiculo = async(req, res) => {
         const mecanico = req.session.mecanico;
         // Salvar no banco de dados
         await Veiculo.create({  modelo, marca, ano, id_cliente });
-        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+        res.render('mecanico/painelMecanico', {mecanico});  // Redireciona para painel do mecanico
     } catch (error) {
         console.error('Erro ao cadastrar Veiculo:', error);
         res.status(500).send('Erro ao cadastrar veiculo');
@@ -174,7 +174,7 @@ exports.atualizandoVeiculo = async(req, res) => {
         // Recupere os dados do mecânico da sessão
         const mecanico = req.session.mecanico;
         await Veiculo.update({ modelo, marca, ano, id_cliente }, { where: { id } });
-        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+        res.render('mecanico/painelMecanico', {mecanico});  // Redireciona para painel do mecanico
     } catch (error) {
         console.error('Erro ao atualizar Veiculo:', error);
         res.status(500).send('Erro ao atualizar veículo');
@@ -187,7 +187,7 @@ exports.deletaVeiculo = async(req, res) => {
     try {
         const mecanico = req.session.mecanico;
         await Veiculo.destroy({ where: { id } });
-        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+        res.render('mecanico/painelMecanico', {mecanico});  // Redireciona para painel do mecanico
     } catch (error) {
         console.error('Erro ao deletar Veiculo:', error);
         res.status(500).send('Erro ao deletar veículo');
@@ -223,7 +223,7 @@ exports.cadastroCliente = async(req, res) => {
         const mecanico = req.session.mecanico;
         // Salvar no banco de dados
         await Cliente.create({  nome, telefone, email, endereco  });
-        res.render('mecanico/painelMecanico', {Mecanico: mecanico});  // Redireciona para painel do mecanico
+        res.render('mecanico/painelMecanico', {mecanico});  // Redireciona para painel do mecanico
     } catch (error) {
         console.error('Erro ao cadastrar Cliente:', error);
         res.status(500).send('Erro ao cadastrar Cliente');
@@ -383,7 +383,7 @@ exports.solicitarServico = async(req, res) => {
             descricao,
             status: 'PENDENTE' // Sempre começa como pendente
         });
-        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+        res.render('mecanico/painelMecanico', {mecanico}); // Redireciona para a listagem
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao criar a solicitação de serviço');
@@ -417,7 +417,7 @@ exports.solicitarPeca = async(req, res) => {
             preco,
             status: 'PENDENTE' // Sempre começa como pendente
         });
-        res.render('mecanico/painelMecanico', {Mecanico:mecanico}); // Redireciona para a listagem
+        res.render('mecanico/painelMecanico', {mecanico}); // Redireciona para a listagem
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao criar a solicitação de peça');

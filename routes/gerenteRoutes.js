@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const authMiddleware = require('../middlewares/authMiddleware');
-const { Mecanico, Solicitacoes_peca, Gerente } = require('../models');
-const gerenteController = require('../controllers/gerenteController')
+const {authMiddlewareGerente} = require('../middlewares/authMiddleware');
+const { Mecanico, Solicitacoes_peca, Gerente, Peca } = require('../models');
+const gerenteController = require('../controllers/gerenteController');
 
 // router.get('/', authMiddleware, (req, res) => {
 //     if (req.user.userType !== 'gerente') {
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
 });
 
 // Proteger todas as rotas abaixo
-router.use(authMiddleware);
+router.use(authMiddlewareGerente);
 
 //Rotas Controle do Mecanico
 router.get('/mecanico/cadastro', async (req, res) => {
@@ -77,7 +77,8 @@ router.get('/mecanico/listar', gerenteController.listarMecanicos);
 
 //Rotas Controle das Pecas
 router.get('/pecas/cadastro', async (req, res) => {
-    res.render('pecas/cadastro');
+    const peca = await Peca.findOne();
+    res.render('pecas/cadastro', {peca});
 });
 
 router.get('/pecas/solicitacoes', async (req, res) => { 
@@ -122,6 +123,10 @@ router.get('/gerentes/cadastro', async (req, res) => {
     const gerente = null;
     res.render('gerente/cadastro', {gerente});
 });
+
+//rota do pdf
+router.get('/servico/pdf/:id', gerenteController.ordemServico);
+
 router.post('/gerentes/cadastro', gerenteController.cadastrarGerente);
 router.delete('/gerentes/deletar/:id', gerenteController.deletarGerente);
 router.get('/gerentes/editar/:id', gerenteController.getEditarGerente);

@@ -1,5 +1,8 @@
 const { Mecanico, Peca, Servico, Veiculo, Pagamento, Catalogo, Gerente, Cliente, Solicitacoes_peca, Solicitacoes_servico, sequelize } = require('../models');
 const { get } = require('../routes/gerenteRoutes');
+const PDFDocument = require('pdfkit');
+
+
 
 
 //Metodos Mecanico
@@ -151,6 +154,55 @@ const listarServico = async(req,res) => {
         res.status(500).json({error: "Erro ao listar Servicos"})
     }
 }
+
+//pdf da ordem de servico
+const ordemServico = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+
+        // Buscar informações do serviço pelo ID
+        const servico = await Servico.findOne({
+            where: { id },
+            include: [
+                { model: Veiculo, include: Cliente },
+                { model: Catalogo },
+                { model: Peca },
+                { model: Mecanico },
+            ]
+        });
+
+        if (!servico) {
+            return res.status(404).send("Serviço não encontrado.");
+        }
+
+        // Criar o documento PDF
+        const doc = new PDFDocument();
+
+        // Configura o cabeçalho de resposta para abrir o PDF no navegador
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename=servico_${id}.pdf`);
+
+        // Envia o PDF diretamente para a resposta
+        doc.pipe(res);
+
+        // Adiciona conteúdo ao PDF
+        doc.fontSize(16).text(`Detalhes do Serviço - ID: ${id}`, { align: 'center' });
+        doc.moveDown();
+        doc.text(`Mecânico: ${servico.Mecanico.nome}`);
+        doc.text(`Veículo: ${servico.Veiculo.modelo}`);
+        doc.text(`Cliente: ${servico.Veiculo.Cliente.nome}`);
+        doc.text(`Peça: ${servico.Peca ? servico.Peca.nome : "Não utilizado"}`);
+        doc.text(`Serviço: ${servico.Catalogo.nome}`);
+        doc.text(`Descrição: ${servico.descricao}`);
+        doc.text(`Status: ${servico.status}`);
+        doc.end(); // Finaliza o documento PDF
+    } catch (error) {
+        console.error("Erro ao gerar PDF:", error);
+        res.status(500).send("Erro ao gerar PDF.");
+    }
+};
+
 
 
 //Methods Gerente
@@ -367,4 +419,5 @@ module.exports = {
     processarSolicitacaoPeca,
     listarSolicitacoesServicos,
     processarSolicitacaoServicos,
+    ordemServico,
 };
