@@ -168,6 +168,7 @@ const ordemServico = async (req, res) => {
                 { model: Veiculo, include: Cliente },
                 { model: Catalogo },
                 { model: Peca },
+                { model: Pagamento },
                 { model: Mecanico },
             ]
         });
@@ -196,6 +197,10 @@ const ordemServico = async (req, res) => {
         doc.text(`Serviço: ${servico.Catalogo.nome}`);
         doc.text(`Descrição: ${servico.descricao}`);
         doc.text(`Status: ${servico.status}`);
+        doc.moveDown();
+        doc.text("Pagamento:");
+        doc.text(`Tipo: ${servico.Pagamento.tipo === 0 ? 'Credito' : servico.Pagamento.tipo === 1 ? 'Débito' : 'Dinheiro/Pix'}`);
+        doc.text(`Valor: R$ ${servico.Pagamento.valor.toFixed(2)}`);
         doc.end(); // Finaliza o documento PDF
     } catch (error) {
         console.error("Erro ao gerar PDF:", error);
